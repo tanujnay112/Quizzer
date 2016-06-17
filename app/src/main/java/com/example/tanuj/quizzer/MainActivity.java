@@ -1,9 +1,8 @@
 package com.example.tanuj.quizzer;
 
-import android.app.Activity;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -27,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button x;
     Button y;
     Button z;
-    String correct;
+    char correct;
     LinearLayout corr;
     Button bNext;
     int current;
@@ -60,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 int n = o.size()-1;
                 int b = (int) Math.random()*n;
                 if(current ==b) {
+                    if(n!=0)
                     b = (b+1)%n;
                 }
                 current = b;
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 x.setText("X) "+h.get("x"));
                 y.setText("Y) "+h.get("y"));
                 z.setText("Z) "+h.get("z"));
-                correct = h.get("correct");
+                correct = h.get("correct").charAt(0);
             }
 
             @Override
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 x.setText("X) "+h.get("x"));
                 y.setText("Y) "+h.get("y"));
                 z.setText("Z) "+h.get("z"));
-                correct = h.get("correct");
+                correct = h.get("correct").charAt(0);
             }
 
             @Override
@@ -108,8 +108,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-    Toast t = new Toast(this);
-        if(getResources().getResourceEntryName(v.getId()).equals(correct)){
+    Toast t = Toast.makeText(this,"",Toast.LENGTH_SHORT);
+        Log.e("ASDFSDF",getResources().getResourceEntryName(v.getId()));
+        if(getResources().getResourceEntryName(v.getId()).charAt(2)== (correct)){
             corr.setVisibility(View.VISIBLE);
         }else{
             t.setText("Incorrect!");
