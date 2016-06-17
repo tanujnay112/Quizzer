@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        corr = (LinearLayout) findViewById(R.id.correct);
         setContentView(R.layout.activity_main);
+        corr = (LinearLayout) findViewById(R.id.correct);
         Firebase.setAndroidContext(this);
         mref = new Firebase("https://popping-inferno-1330.firebaseio.com/quizlist");
         q = (TextView) findViewById(R.id.question);
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ArrayList o = (ArrayList) snapshot.getValue();
                 int n = o.size()-1;
                 int b = (int) Math.random()*n;
-                if(current ==b) {
+                if(current ==b&&b!=0) {
                     b = (b+1)%n;
                 }
                 current = b;
@@ -108,13 +108,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-    Toast t = Toast.makeText(this,"",Toast.LENGTH_SHORT);
-        Log.e("ASDFSDF",getResources().getResourceEntryName(v.getId()));
+    Toast t = Toast.makeText(this,"Incorrect!",Toast.LENGTH_SHORT);
         if(getResources().getResourceEntryName(v.getId()).charAt(2)== (correct)){
             corr.setVisibility(View.VISIBLE);
         }else{
-            t.setText("Incorrect!");
+            t.show();
         }
-        t.show();
+
     }
 }
