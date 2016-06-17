@@ -1,8 +1,14 @@
 package com.example.tanuj.quizzer;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -13,36 +19,57 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Firebase mref;
     TextView q;
-    TextView w;
-    TextView x;
-    TextView y;
-    TextView z;
+    Button w;
+    Button x;
+    Button y;
+    Button z;
+    String correct;
+    LinearLayout corr;
+    Button bNext;
+    int current;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        corr = (LinearLayout) findViewById(R.id.correct);
         setContentView(R.layout.activity_main);
         Firebase.setAndroidContext(this);
         mref = new Firebase("https://popping-inferno-1330.firebaseio.com/quizlist");
         q = (TextView) findViewById(R.id.question);
-        w = (TextView) findViewById(R.id.tvw);
-        x = (TextView) findViewById(R.id.tvx);
-        y = (TextView) findViewById(R.id.tvy);
-        z = (TextView) findViewById(R.id.tvz);
+        w = (Button) findViewById(R.id.tvw);
+        w.setOnClickListener(this);
+        x = (Button) findViewById(R.id.tvx);
+        y = (Button) findViewById(R.id.tvy);
+        z = (Button) findViewById(R.id.tvz);
+        bNext = (Button) findViewById(R.id.bNext);
+        bNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nextQuestion();
+                corr.setVisibility(View.GONE);
+            }
+        });
         mref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 ArrayList o = (ArrayList) snapshot.getValue();
-                HashMap<String,String> h = (HashMap<String,String>) o.get(0);
+                int n = o.size()-1;
+                int b = (int) Math.random()*n;
+                if(current ==b) {
+                    b = (b+1)%n;
+                }
+                current = b;
+                HashMap<String,String> h = (HashMap<String,String>) o.get(b);
                 q.setText(h.get("question"));
-                w.setText(h.get("w"));
-                x.setText(h.get("x"));
-                y.setText(h.get("y"));
-                z.setText(h.get("z"));
+                w.setText("W) "+h.get("w"));
+                x.setText("X) "+h.get("x"));
+                y.setText("Y) "+h.get("y"));
+                z.setText("Z) "+h.get("z"));
+                correct = h.get("correct");
             }
 
             @Override
@@ -50,5 +77,43 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void nextQuestion() {
+        mref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                ArrayList o = (ArrayList) snapshot.getValue();
+                int n = o.size()-1;
+                int b = (int) Math.random()*n;
+                if(current ==b) {
+                    b = (b+1)%n;
+                }
+                current = b;
+                HashMap<String,String> h = (HashMap<String,String>) o.get(b);
+                q.setText(h.get("question"));
+                w.setText("W) "+h.get("w"));
+                x.setText("X) "+h.get("x"));
+                y.setText("Y) "+h.get("y"));
+                z.setText("Z) "+h.get("z"));
+                correct = h.get("correct");
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View v) {
+    Toast t = new Toast(this);
+        if(getResources().getResourceEntryName(v.getId()).equals(correct)){
+            corr.setVisibility(View.VISIBLE);
+        }else{
+            t.setText("Incorrect!");
+        }
+        t.show();
     }
 }
