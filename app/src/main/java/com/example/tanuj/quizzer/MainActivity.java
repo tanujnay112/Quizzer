@@ -89,7 +89,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             public void onDataChange(DataSnapshot snapshot) {
                 ArrayList o = (ArrayList) snapshot.getValue();
                 int n = o.size()-1;
-                int b = (int) Math.random()*n;
+                int b =(int) Math.round(Math.random()*n);
                 if(current ==b&&b!=0) {
                     b = (b+1)%n;
                 }
