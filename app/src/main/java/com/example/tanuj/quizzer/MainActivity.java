@@ -43,8 +43,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
         w = (Button) findViewById(R.id.tvw);
         w.setOnClickListener(this);
         x = (Button) findViewById(R.id.tvx);
+        x.setOnClickListener(this);
         y = (Button) findViewById(R.id.tvy);
+        y.setOnClickListener(this);
         z = (Button) findViewById(R.id.tvz);
+        z.setOnClickListener(this);
         bNext = (Button) findViewById(R.id.bNext);
         bNext.setOnClickListener(new View.OnClickListener() {
             @Override
